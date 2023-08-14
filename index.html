@@ -198,7 +198,7 @@
             img2.classList.remove('img2')
             img2.src = ''
 
-            fetch('https://swapi.dev/api/planets/' + Math.ceil(Math.random() * 60))
+            fetch('https://swapi.dev/api/planets/' + Math.ceil(Math.random() * 10))
                 .then(res => res.json())
                 .then(data => {
                     load2.innerHTML = ''
@@ -228,12 +228,17 @@
                 .then(data => {
                     load3.innerHTML = ''
                     load3.classList.remove('load3')
+                    if(data.name === undefined) {
+                        img3.classList.add('img3')
+                        img3.src = `assets/404.jpg`
+                    } else {
+                        img3.classList.add('img3')
+                        img3.src = `assets/starships/${data.name}.jpg`
+                    }
                     starship.innerHTML = 'Name: ' + data.name
                     model.innerHTML = 'Model: ' + data.model
                     classe.innerHTML = 'Class: ' + data.starship_class
                     crew.innerHTML = 'Crew: ' + data.crew
-                    img3.classList.add('img3')
-                    img3.src = `assets/starships/${data.name}.jpg`
             })
         })
     </script>
