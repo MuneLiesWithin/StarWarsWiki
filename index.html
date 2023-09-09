@@ -178,12 +178,9 @@
                             }
                             if (img[index].image.includes("404")) {
                                 return fetchCharacter()
-                            }
-                            if (img[index] && img[index].image) {
+                            } else {
                                 img1.src = img[index].image
                                 img1.classList.add('img1')
-                            } else {
-                                return fetchCharacter()
                             }
                         })
                 })
