@@ -212,6 +212,26 @@
             })
         })
 
+        function fetchStarship() {
+            fetch('https://swapi.dev/api/starships/' + Math.ceil(Math.random() * 15))
+                .then(res => {
+                    if(res.status === 404) {
+                        return fetchStarship()
+                    }
+                    return res.json()
+                })
+                .then(data => {
+                    load3.innerHTML = ''
+                    load3.classList.remove('load3')
+                    starship.innerHTML = 'Name: ' + data.name
+                    model.innerHTML = 'Model: ' + data.model
+                    classe.innerHTML = 'Class: ' + data.starship_class
+                    crew.innerHTML = 'Crew: ' + data.crew
+                    img3.classList.add('img3')
+                    img3.src = `assets/starships/${data.name}.jpg`
+            })
+        }
+
         nave.addEventListener('click', (e) => {
             e.preventDefault()
             starship.innerHTML = ''
@@ -223,23 +243,7 @@
             img3.classList.remove('img3')
             img3.src = ''
 
-            fetch('https://swapi.dev/api/starships/' + Math.ceil(Math.random() * 15))
-                .then(res => res.json())
-                .then(data => {
-                    load3.innerHTML = ''
-                    load3.classList.remove('load3')
-                    if(data.name === undefined) {
-                        img3.classList.add('img3')
-                        img3.src = `assets/404.jpg`
-                    } else {
-                        img3.classList.add('img3')
-                        img3.src = `assets/starships/${data.name}.jpg`
-                    }
-                    starship.innerHTML = 'Name: ' + data.name
-                    model.innerHTML = 'Model: ' + data.model
-                    classe.innerHTML = 'Class: ' + data.starship_class
-                    crew.innerHTML = 'Crew: ' + data.crew
-            })
+            fetchStarship()
         })
     </script>
 </body>
