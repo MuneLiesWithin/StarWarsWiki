@@ -151,21 +151,16 @@
         const load3 = document.querySelector('.load3')
         const img1 = document.getElementById('img1')
         const img2 = document.getElementById('img2')
-        const img3 = document.getElementById('img3')        
-
-        personagem.addEventListener('click', (e) => {
-            e.preventDefault()
-            character.innerHTML = ''
-            height.innerHTML = ''
-            eyeColor.innerHTML = ''
-            birthYear.innerHTML = ''
-            load1.classList.add('load1')
-            load1.innerHTML = 'Loading...'
-            img1.classList.remove('img1')
-            img1.src = ''
-
+        const img3 = document.getElementById('img3')
+        
+        function fetchCharacter() {
             fetch('https://swapi.dev/api/people/'+ Math.ceil(Math.random() * 82))
-                .then(res => res.json())
+                .then(res => {
+                    if(res.status === 404) {
+                        return fetchCharacter()
+                    }    
+                    return res.json()
+                })
                 .then(data => {
                     load1.innerHTML = ''
                     load1.classList.remove('load1')
@@ -178,13 +173,34 @@
                         .then(res => res.json())
                         .then(img => {
                             let index = 0;
-                            while(img[index].name != data.name){
+                            while(img[index] && img[index].name != data.name){
                                 index++
                             }
-                            img1.src = img[index].image
-                            img1.classList.add('img1')
+                            if (img[index].image.includes("404")) {
+                                return fetchCharacter()
+                            }
+                            if (img[index] && img[index].image) {
+                                img1.src = img[index].image
+                                img1.classList.add('img1')
+                            } else {
+                                return fetchCharacter()
+                            }
                         })
                 })
+        }
+
+        personagem.addEventListener('click', (e) => {
+            e.preventDefault()
+            character.innerHTML = ''
+            height.innerHTML = ''
+            eyeColor.innerHTML = ''
+            birthYear.innerHTML = ''
+            load1.classList.add('load1')
+            load1.innerHTML = 'Loading...'
+            img1.classList.remove('img1')
+            img1.src = ''
+
+            fetchCharacter()
         })
 
         planeta.addEventListener('click', (e) => {
@@ -213,6 +229,9 @@
         })
 
         function fetchStarship() {
+            load3.innerHTML = 'Loading...'
+            load3.classList.add('load3')
+
             fetch('https://swapi.dev/api/starships/' + Math.ceil(Math.random() * 15))
                 .then(res => {
                     if(res.status === 404) {
